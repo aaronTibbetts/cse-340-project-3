@@ -25,10 +25,10 @@ void print(struct InstructionNode* node){
         if(node->type == CJMP){
             if(node->cjmp_inst.target->next == NULL){
                 cout<<"If's NOOP node's next is null\n";
-                cout<<"If's NOOP node deals with var:" <<node->cjmp_inst.op1_loc <<"\n";
+                cout<<"If's NOOP node deals with var:" <<node->cjmp_inst.operand1_index <<"\n";
             } else {
                 cout<<"If's NOOP node's next is type: " <<node->cjmp_inst.target->next->type<< " it's address is: "<< node->cjmp_inst.target->next <<"\n";
-                cout<<"If's NOOP node deals with var:" <<node->cjmp_inst.op1_loc <<"\n";
+                cout<<"If's NOOP node deals with var:" <<node->cjmp_inst.operand1_index <<"\n";
 
             }
         }
@@ -74,7 +74,7 @@ struct InstructionNode* createInputInstruction(string varName){
     int addr = locationTable[varName];
 
     newNode->type = IN;
-    newNode->input_inst.var_loc = addr;
+    newNode->input_inst.var_index = addr;
     newNode->next = NULL;
 
     return newNode;
@@ -85,12 +85,12 @@ struct InstructionNode* createAssignInstruction(string varName, int constantToAs
     newNode->type = ASSIGN;
     int addr = locationTable[varName];
     
-    newNode->assign_inst.lhs_loc = addr;
+    newNode->assign_inst.left_hand_side_index = addr;
     newNode->assign_inst.op = OPERATOR_NONE;
 
     int constantAddr = constantLocationTable[constantToAssign];
     //cout << "constant addr is: " << constantAddr << "\n";
-    newNode->assign_inst.op1_loc = constantAddr;
+    newNode->assign_inst.operand1_index = constantAddr;
     newNode->next = NULL;
     return newNode;
 }
@@ -99,7 +99,7 @@ struct InstructionNode* createOutputInstruction(string varName){
     struct InstructionNode* newNode = new InstructionNode;
     newNode->type = OUT;
     int addr = locationTable[varName];
-    newNode->output_inst.var_loc = addr;
+    newNode->output_inst.var_index = addr;
     newNode->next = NULL;
     return newNode;
 }
@@ -121,10 +121,10 @@ struct InstructionNode* createAssignWithTwoConstants(string varName, int constan
     }
 
     newNode->type = ASSIGN;
-    newNode->assign_inst.lhs_loc = addr;
+    newNode->assign_inst.left_hand_side_index = addr;
     newNode->assign_inst.op = op;
-    newNode->assign_inst.op1_loc = addrOne;
-    newNode->assign_inst.op2_loc = addrTwo;
+    newNode->assign_inst.operand1_index = addrOne;
+    newNode->assign_inst.operand2_index = addrTwo;
     newNode->next = NULL;
     return newNode;
 }
@@ -146,12 +146,12 @@ struct InstructionNode* createAssignWithOperatorInstruction(string varName, stri
     int constantAddr = constantLocationTable[constantToAssign];
 
     newNode->type = ASSIGN;
-    newNode->assign_inst.lhs_loc = addr;
+    newNode->assign_inst.left_hand_side_index = addr;
 
 
     newNode->assign_inst.op = op; 
-    newNode->assign_inst.op1_loc = addrofVarToAddWith;
-    newNode->assign_inst.op2_loc = constantAddr;
+    newNode->assign_inst.operand1_index = addrofVarToAddWith;
+    newNode->assign_inst.operand2_index = constantAddr;
     newNode->next = NULL;
     return newNode;
 }
@@ -179,8 +179,8 @@ struct InstructionNode* createIfInstruction(string varNameOne, string varNameTwo
 
     int addr = locationTable[varNameOne];
     int addr2 = locationTable[varNameTwo];
-    newNode->cjmp_inst.op1_loc = addr;
-    newNode->cjmp_inst.op2_loc = addr2;
+    newNode->cjmp_inst.operand1_index = addr;
+    newNode->cjmp_inst.operand2_index = addr2;
     newNode->cjmp_inst.target = createNOOPInstrutction();
     newNode->next = NULL;
     return newNode;
@@ -202,8 +202,8 @@ struct InstructionNode* createIfInstructionWithConstant(string varName, int cons
     newNode->cjmp_inst.condition_op = op;
     int addr = locationTable[varName];
     int addrTwo = constantLocationTable[constant];
-    newNode->cjmp_inst.op1_loc = addr;
-    newNode->cjmp_inst.op2_loc = addrTwo;
+    newNode->cjmp_inst.operand1_index = addr;
+    newNode->cjmp_inst.operand2_index = addrTwo;
     newNode->cjmp_inst.target = createNOOPInstrutction();
     newNode->next = NULL;
     return newNode;
@@ -215,9 +215,9 @@ struct InstructionNode* createVarAssignInstruction(string varNameOne, string var
     newNode->type = ASSIGN;
     int addr = locationTable[varNameOne];
     int addr2 = locationTable[varNameTwo];
-    newNode->assign_inst.lhs_loc = addr;
+    newNode->assign_inst.left_hand_side_index = addr;
     newNode->assign_inst.op = OPERATOR_NONE;
-    newNode->assign_inst.op1_loc = addr2;
+    newNode->assign_inst.operand1_index = addr2;
     newNode->next = NULL;
     return newNode;
 }
@@ -242,10 +242,10 @@ struct InstructionNode* createAssignWithOperatorAndSecondVarInsutruction(string 
     int addrofVarTwoToAddWith = locationTable[varNameThree];
     
     newNode->type = ASSIGN;
-    newNode->assign_inst.lhs_loc = addr;
+    newNode->assign_inst.left_hand_side_index = addr;
     newNode->assign_inst.op = op;
-    newNode->assign_inst.op1_loc = addrofVarOneToAddWith;
-    newNode->assign_inst.op2_loc = addrofVarTwoToAddWith;
+    newNode->assign_inst.operand1_index = addrofVarOneToAddWith;
+    newNode->assign_inst.operand2_index = addrofVarTwoToAddWith;
     newNode->next = NULL;
     return newNode;
 
@@ -265,8 +265,8 @@ struct InstructionNode* createWhileInstruction(string varNameOne, int constant, 
         op = CONDITION_NOTEQUAL;
     }
     newNode->cjmp_inst.condition_op = op;
-    newNode->cjmp_inst.op1_loc = addr;
-    newNode->cjmp_inst.op2_loc = addr2;
+    newNode->cjmp_inst.operand1_index = addr;
+    newNode->cjmp_inst.operand2_index = addr2;
     newNode->cjmp_inst.target = createNOOPInstrutction();
     newNode->next = NULL;
     return newNode;
@@ -286,8 +286,8 @@ struct InstructionNode* createWhileWithTwoVars(string varNameOne, string varName
         op = CONDITION_NOTEQUAL;
     }
     newNode->cjmp_inst.condition_op = op;
-    newNode->cjmp_inst.op1_loc = addr;
-    newNode->cjmp_inst.op2_loc = addrTwo;
+    newNode->cjmp_inst.operand1_index = addr;
+    newNode->cjmp_inst.operand2_index = addrTwo;
     newNode->cjmp_inst.target = createNOOPInstrutction();
     newNode->next = NULL;
     return newNode;
@@ -330,7 +330,7 @@ void endBlock(stack<struct typeOfCJMP> &stack, struct InstructionNode* current, 
     }
 }
 
-struct InstructionNode *parse_Generate_Intermediate_Representation(){
+struct InstructionNode *parse_generate_intermediate_representation(){
     LexicalAnalyzer lexer = LexicalAnalyzer();
     Token token;
     int memcounter = 0; 
@@ -947,7 +947,7 @@ struct InstructionNode *parse_Generate_Intermediate_Representation(){
     }
     inputs.push_back(stoi(token.lexeme));
    
-    print(first);
+    //print(first);
     
     return first;
 }
