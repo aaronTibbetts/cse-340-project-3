@@ -57,7 +57,7 @@ struct InstructionNode* createJmpInstruction();
 
 void endBlock(stack<struct typeOfCJMP> &stack, struct InstructionNode* current, int counter);
 
-struct InstructionNode *parse_Generate_Intermediate_Representation();
+struct InstructionNode *parse_generate_tntermediate_representation();
 
 
 
