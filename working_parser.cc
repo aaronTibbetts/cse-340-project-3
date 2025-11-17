@@ -10,39 +10,39 @@ map <string, int> locationTable;
 
 void printMem(int memCounter){
     for(int i = 0; i < memCounter; i++){
-        cout<< "mem in mem" << i << " is: "<< mem[i] <<"\n";
+        //cout<< "mem in mem" << i << " is: "<< mem[i] <<"\n";
     }
 }
 void print(struct InstructionNode* node){
     
     if(node->next == NULL){
-        cout <<"Only node is type: " <<node->type <<"\n";
+        //cout <<"Only node is type: " <<node->type <<"\n";
         return;
     }
 
     while(node!= NULL){
-        cout <<"Current node is type: " <<node->type <<" it's address is "<< node << "\n";
+        //cout <<"Current node is type: " <<node->type <<" it's address is "<< node << "\n";
         if(node->type == CJMP){
             if(node->cjmp_inst.target->next == NULL){
-                cout<<"If's NOOP node's next is null\n";
-                cout<<"If's NOOP node deals with var:" <<node->cjmp_inst.operand1_index <<"\n";
+                //cout<<"If's NOOP node's next is null\n";
+                //cout<<"If's NOOP node deals with var:" <<node->cjmp_inst.operand1_index <<"\n";
             } else {
-                cout<<"If's NOOP node's next is type: " <<node->cjmp_inst.target->next->type<< " it's address is: "<< node->cjmp_inst.target->next <<"\n";
-                cout<<"If's NOOP node deals with var:" <<node->cjmp_inst.operand1_index <<"\n";
+                //cout<<"If's NOOP node's next is type: " <<node->cjmp_inst.target->next->type<< " it's address is: "<< node->cjmp_inst.target->next <<"\n";
+                //cout<<"If's NOOP node deals with var:" <<node->cjmp_inst.operand1_index <<"\n";
 
             }
         }
         if(node->type == JMP){
             if(node->jmp_inst.target == NULL){
-                cout<<"JMP's target is null\n";
+                //cout<<"JMP's target is null\n";
             } else{
-                cout<<"JMP's target is : " <<node->jmp_inst.target<<"\n";
+                //cout<<"JMP's target is : " <<node->jmp_inst.target<<"\n";
             }
             
             if(node->next == NULL){
-                cout<<"JMP's next is null\n";
+                //cout<<"JMP's next is null\n";
             } else{
-                cout<<"JMP's next is type: " <<node->next->type <<  " it's address is" << node->next <<"\n";
+                //cout<<"JMP's next is type: " <<node->next->type <<  " it's address is" << node->next <<"\n";
             }
         }
         
@@ -89,7 +89,7 @@ struct InstructionNode* createAssignInstruction(string varName, int constantToAs
     newNode->assign_inst.op = OPERATOR_NONE;
 
     int constantAddr = constantLocationTable[constantToAssign];
-    //cout << "constant addr is: " << constantAddr << "\n";
+    ////cout << "constant addr is: " << constantAddr << "\n";
     newNode->assign_inst.operand1_index = constantAddr;
     newNode->next = NULL;
     return newNode;
@@ -479,18 +479,18 @@ struct InstructionNode *parse_generate_intermediate_representation(){
                 }
                 if(inForLoop){
                     // b = 1
-                    //cout <<"varNameOne empty ?: " <<varNameOne.empty() << "\n"; 
-                    //cout <<"varNameTwo empty ?: " <<varNameTwo.empty() << "\n";
+                    ////cout <<"varNameOne empty ?: " <<varNameOne.empty() << "\n"; 
+                    ////cout <<"varNameTwo empty ?: " <<varNameTwo.empty() << "\n";
                     if(varNameOne.empty() && constant != -99999999){
                         struct InstructionNode* inputNode = createAssignInstruction(token.lexeme, constant);
                         insertNode(inputNode, current);
                         current = inputNode;
-                        //cout << "b = 1\n";
+                        ////cout << "b = 1\n";
                         //b = b + 1;
                     } else if(!varNameOne.empty() && constant != -99999999){
                         struct InstructionNode* inputNode = createAssignWithOperatorInstruction(token.lexeme, varNameOne, constant, operatorType);
                         prevNodes.push(inputNode);
-                        //cout <<"b = b + 1\n";
+                        ////cout <<"b = b + 1\n";
                         //b = a; 
                     } else if(!varNameOne.empty() && constant == -99999999 && varNameTwo.empty()){
                         struct InstructionNode* inputNode = createVarAssignInstruction(token.lexeme, varNameOne);
@@ -785,12 +785,12 @@ struct InstructionNode *parse_generate_intermediate_representation(){
         if(token.token_type == RBRACE){
             if(cjmpStack.size() > 0){
                 if(lexer.peek(1).token_type != NUM && lexer.peek(1).token_type != END_OF_FILE && lexer.peek(1).token_type == RBRACE){
-                    cout <<"aloha\n";
+                    //cout <<"aloha\n";
                     rBraceCounter++;
                 } 
                 if(lexer.peek(1).token_type != RBRACE && lexer.peek(1).token_type != NUM && lexer.peek(1).token_type != END_OF_FILE){
                     rBraceCounter++;
-                    cout << "howdy\n";
+                    //cout << "howdy\n";
                     if(cjmpStack.top().cjmpType == WHILE){
                         struct InstructionNode* jmpNode = createJmpInstruction();
                         struct typeOfCJMP node = cjmpStack.top();
@@ -818,7 +818,7 @@ struct InstructionNode *parse_generate_intermediate_representation(){
                     
                 }
                 if(lexer.peek(1).token_type == RBRACE && lexer.peek(2).token_type == NUM){
-                    cout <<"hello\n";
+                    //cout <<"hello\n";
                     if(cjmpStack.top().cjmpType == WHILE){
                         struct InstructionNode* jmpNode = createJmpInstruction();
                         struct typeOfCJMP node = cjmpStack.top();
@@ -829,7 +829,7 @@ struct InstructionNode *parse_generate_intermediate_representation(){
                         cjmpStack.push(node);
                     }
                     if(cjmpStack.top().cjmpType == FOR){
-                        cout << "sup\n";
+                        //cout << "sup\n";
                         struct InstructionNode* jmpNode = createJmpInstruction();
                         struct typeOfCJMP node = cjmpStack.top();
                         cjmpStack.pop();
